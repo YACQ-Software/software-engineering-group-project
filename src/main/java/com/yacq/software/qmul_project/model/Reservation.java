@@ -1,15 +1,20 @@
 package com.yacq.software.qmul_project.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "reservations")
 public class Reservation {
 
+    @Id
     private String reservationId;
+
     private String customerId;
     private Long reservationDate;
     private int numberOfPeople;
-    private Table tableNumber;
+    private int tableNumber;
 
     // Getters and Setters
-
 
     public String getReservationId() {
         return reservationId;
@@ -43,11 +48,11 @@ public class Reservation {
         this.numberOfPeople = numberOfPeople;
     }
 
-    public Table getTableNumber() {
+    public int getTableNumber() {
         return tableNumber;
     }
 
-    public void setTableNumber(Table tableNumber) {
+    public void setTableNumber(int tableNumber) {
         this.tableNumber = tableNumber;
     }
 
