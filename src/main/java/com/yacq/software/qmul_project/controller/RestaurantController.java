@@ -24,11 +24,6 @@ public class RestaurantController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @GetMapping("/greeting")
-    public String getGreeting() {
-        return customerService.getGreeting();
-    }
-
 
     // GET /api/get-customers
     @GetMapping("/get-customers")
