@@ -1,10 +1,12 @@
 package com.yacq.software.qmul_project.model.table;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "tables")
 public class Table {
 
+    @Id
     private int tableId;
     private int size;
     private TableShape shape;

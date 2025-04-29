@@ -27,6 +27,10 @@ public class Reservation {
         return reservationId;
     }
 
+    public void setReservationId(String reservationId) {
+        this.reservationId = reservationId;
+    }
+
     public int getTableId() {
         return tableId;
     }

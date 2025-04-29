@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(ReservationController.class)
-public class ReservationControllerTest {
+public class ReservationServiceTest {
 
     @Autowired
     private MockMvc mockMvc;
