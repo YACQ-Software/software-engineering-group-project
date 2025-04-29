@@ -9,26 +9,12 @@ public class Customer {
     @Id
     private String customerId;
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private String email;
+    private String phone;
+    private String preferences;
 
     // Getters and Setters
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public String getCustomerId() {
         return customerId;
@@ -36,6 +22,14 @@ public class Customer {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -46,13 +40,30 @@ public class Customer {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(String preferences) {
+        this.preferences = preferences;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", customerId='" + customerId + '\'' +
+                "customerId='" + customerId + '\'' +
+                ", Name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", phoneNumber=" + phone +
+                ", preferences='" + preferences + '\'' +
                 '}';
     }
 }

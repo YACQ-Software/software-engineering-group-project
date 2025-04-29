@@ -11,6 +11,8 @@ import java.util.List;
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
+    //JUST REDEFINE RESERVATION MODEL SO THAT IT MATCHES THE MONGODB AND IT WILL WORK
+
     @Autowired
     private ReservationRepository reservationRepository;
 
