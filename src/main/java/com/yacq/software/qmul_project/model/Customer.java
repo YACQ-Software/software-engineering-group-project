@@ -60,9 +60,9 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "customerId='" + customerId + '\'' +
-                ", Name='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber=" + phone +
+                ", phone='" + phone + '\'' +
                 ", preferences='" + preferences + '\'' +
                 '}';
     }

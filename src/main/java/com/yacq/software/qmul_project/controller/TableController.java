@@ -1,6 +1,6 @@
 package com.yacq.software.qmul_project.controller;
 
-import com.yacq.software.qmul_project.model.Table;
+import com.yacq.software.qmul_project.model.table.Table;
 import com.yacq.software.qmul_project.repositories.TableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

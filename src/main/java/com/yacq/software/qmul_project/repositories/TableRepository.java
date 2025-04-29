@@ -1,7 +1,6 @@
 package com.yacq.software.qmul_project.repositories;
 
-import com.yacq.software.qmul_project.model.Customer;
-import com.yacq.software.qmul_project.model.Table;
+import com.yacq.software.qmul_project.model.table.Table;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

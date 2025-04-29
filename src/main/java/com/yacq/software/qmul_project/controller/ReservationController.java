@@ -1,6 +1,6 @@
 package com.yacq.software.qmul_project.controller;
 
-import com.yacq.software.qmul_project.model.Reservation;
+import com.yacq.software.qmul_project.model.reservation.Reservation;
 import com.yacq.software.qmul_project.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
