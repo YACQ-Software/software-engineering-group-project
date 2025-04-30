@@ -1,11 +1,10 @@
 package com.yacq.software.qmul_project;
 
 import com.yacq.software.qmul_project.controller.ReservationController;
-import com.yacq.software.qmul_project.model.Reservation;
+import com.yacq.software.qmul_project.model.reservation.Reservation;
 import com.yacq.software.qmul_project.repositories.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(ReservationController.class)
-public class ReservationControllerTest {
+public class ReservationServiceTest {
 
     @Autowired
     private MockMvc mockMvc;

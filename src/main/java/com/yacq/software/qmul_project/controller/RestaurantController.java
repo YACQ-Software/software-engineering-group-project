@@ -2,7 +2,7 @@ package com.yacq.software.qmul_project.controller;
 
 import com.yacq.software.qmul_project.model.Customer;
 import com.yacq.software.qmul_project.repositories.CustomerRepository;
-import com.yacq.software.qmul_project.service.RestaurantService;
+import com.yacq.software.qmul_project.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +19,10 @@ import java.util.List;
 public class RestaurantController {
 
     @Autowired
-    private RestaurantService restaurantService;
+    private CustomerService customerService;
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @GetMapping("/greeting")
-    public String getGreeting() {
-        return restaurantService.getGreeting();
-    }
 
 
     // GET /api/get-customers
