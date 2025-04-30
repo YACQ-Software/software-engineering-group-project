@@ -1,5 +1,6 @@
 package com.yacq.software.qmul_project.controller;
 
+import com.yacq.software.qmul_project.model.reservation.Reservation;
 import com.yacq.software.qmul_project.model.table.Table;
 import com.yacq.software.qmul_project.model.table.TableSection;
 import com.yacq.software.qmul_project.model.table.TableShape;
@@ -95,5 +96,11 @@ public class TableController {
             @RequestParam TableSection section,
             @RequestParam TableShape shape) {
         return ResponseEntity.ok(tableService.getTablesBySectionAndShape(section, shape));
+    }
+
+    @PostMapping("/auto-optimise-booking")
+    public ResponseEntity<Optional<Table>> autoOptimiseBooking(@RequestBody Reservation reservation) {
+        Optional<Table> optimisedTables = tableService.getMostOptimalTable(reservation);
+        return ResponseEntity.ok(optimisedTables);
     }
 }

@@ -1,5 +1,6 @@
 package com.yacq.software.qmul_project.service;
 
+import com.yacq.software.qmul_project.model.reservation.Reservation;
 import com.yacq.software.qmul_project.model.table.Table;
 import com.yacq.software.qmul_project.model.table.TableSection;
 import com.yacq.software.qmul_project.model.table.TableShape;
@@ -7,6 +8,7 @@ import com.yacq.software.qmul_project.repositories.TableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +87,28 @@ public class TableService {
     public List<Table> getTablesBySectionAndShape(TableSection section, TableShape shape) {
         return tableRepository.findBySectionAndShape(section, shape);
     }
+
+    public Optional<Table> getMostOptimalTable(Reservation reservationRequest) {
+        // Step 1: Fetch available tables based on time and size
+        List<Table> availableTables = getAvailableTables(
+                reservationRequest.getDate(),
+                reservationRequest.getPartySize(),
+                reservationRequest.getSpecialRequests() != null ?
+                        TableOptimisationService.analysePreference(reservationRequest.getSpecialRequests()).orElse(null) : null
+        );
+
+        // Step 2: Check if there are any available tables
+        if (availableTables.isEmpty()) {
+            return Optional.empty(); // No tables available
+        }
+
+        // Step 3: Rank tables by score
+        List<Table> rankedTables = TableOptimisationService.rankTablesByScore(availableTables, reservationRequest);
+
+        // Step 4: Return the table with the highest score (first in the list)
+        return rankedTables.stream().findFirst();
+    }
+
 
     // Check if a table exists
     public boolean existsByTableId(int tableId) {

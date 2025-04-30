@@ -28,6 +28,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("edu.stanford.nlp:stanford-corenlp:4.5.4")
+	implementation("edu.stanford.nlp:stanford-corenlp:4.5.4:models") {
+		exclude(group = "edu.stanford.nlp", module = "stanford-corenlp") // Avoid duplicate classes
+	}
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.projectlombok:lombok")
