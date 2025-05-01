@@ -17,6 +17,7 @@ WORKDIR /app
 
 # Copy the fat jar from the previous build stage
 COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/qmul-project-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
