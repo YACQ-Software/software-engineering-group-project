@@ -1,20 +1,22 @@
 # === Stage 1: Build the application ===
-FROM maven:3.9.4-eclipse-temurin-17 AS build
+FROM gradle:8.5-jdk17 AS build
 WORKDIR /app
 
-# Copy pom.xml and download dependencies (for caching)
-COPY pom.xml .
-COPY src ./src
+# Copy only necessary files to cache dependencies
+COPY build.gradle.kts settings.gradle.kts ./
+COPY gradle ./gradle
+RUN gradle build --no-daemon || return 0  # ignore failure (for caching)
 
-# Build the app
-RUN mvn clean package -DskipTests
+# Copy the full source and build
+COPY . .
+RUN gradle clean build -x test --no-daemon
 
-# === Stage 2: Create runtime image ===
+# === Stage 2: Run stage ===
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Copy built jar from previous stage
-COPY --from=build /app/target/qmul_project-*.jar app.jar
+# Copy the fat jar from the previous build stage
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
