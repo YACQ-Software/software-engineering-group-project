@@ -1,89 +1,134 @@
 package com.yacq.software.qmul_project;
 
-import com.yacq.software.qmul_project.controller.ReservationController;
 import com.yacq.software.qmul_project.model.reservation.Reservation;
+import com.yacq.software.qmul_project.model.reservation.ReservationStatus;
 import com.yacq.software.qmul_project.repositories.ReservationRepository;
+import com.yacq.software.qmul_project.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+@ExtendWith(MockitoExtension.class)
+class ReservationServiceTest {
 
-@WebMvcTest(ReservationController.class)
-public class ReservationServiceTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private ReservationRepository reservationRepository;
 
-    private Reservation reservation1;
-    private Reservation reservation2;
+    @InjectMocks
+    private ReservationService reservationService;
+
+    private Reservation sampleReservation;
 
     @BeforeEach
     void setUp() {
-        reservation1 = new Reservation();
-        reservation1.setReservationId("res1");
-        reservation1.setCustomerId("cust1");
-
-        reservation2 = new Reservation();
-        reservation2.setReservationId("res2");
-        reservation2.setCustomerId("cust1");
+        sampleReservation = new Reservation();
+        sampleReservation.setReservationId("res123");
+        sampleReservation.setCustomerId("cust001");
+        sampleReservation.setTableId(5);
+        sampleReservation.setDate(new Date());
+        sampleReservation.setStatus(ReservationStatus.CONFIRMED);
+        sampleReservation.setCreatedAt(new Date());
     }
 
     @Test
-    void getAllReservations_shouldReturnList() throws Exception {
-        List<Reservation> reservations = Arrays.asList(reservation1, reservation2);
-        when(reservationRepository.findAll()).thenReturn(reservations);
+    void testIsTableAvailable_TableIsAvailable_ReturnsTrue() {
+        when(reservationRepository.findByTableIdAndDate(anyInt(), any(Date.class)))
+                .thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/api/reservations"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+        boolean available = reservationService.isTableAvailable(1, new Date());
+        assertTrue(available);
     }
 
     @Test
-    void getReservationsByCustomer_shouldReturnCustomerReservations() throws Exception {
-        when(reservationRepository.findByCustomerId("cust1")).thenReturn(Arrays.asList(reservation1, reservation2));
+    void testIsTableAvailable_TableNotAvailable_ReturnsFalse() {
+        when(reservationRepository.findByTableIdAndDate(anyInt(), any(Date.class)))
+                .thenReturn(List.of(sampleReservation));
 
-        mockMvc.perform(get("/api/reservations/customer/cust1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+        boolean available = reservationService.isTableAvailable(1, new Date());
+        assertFalse(available);
     }
 
     @Test
-    void createReservation_shouldSaveAndReturnReservation() throws Exception {
-        Reservation newReservation = new Reservation();
-        newReservation.setReservationId("res3");
-        newReservation.setCustomerId("cust2");
+    void testCreateReservation_SetsDefaultsAndSaves() {
+        Reservation reservation = new Reservation();
+        reservation.setCustomerId("cust002");
+        reservation.setTableId(3);
+        reservation.setDate(new Date());
 
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(newReservation);
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        mockMvc.perform(post("/api/reservations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newReservation)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("res3"));
+        Reservation created = reservationService.createReservation(reservation);
+
+        assertNotNull(created.getReservationId());
+        assertNotNull(created.getCreatedAt());
+        assertEquals(ReservationStatus.PROCESSING, created.getStatus());
     }
 
     @Test
-    void cancelReservation_shouldCallDeleteById() throws Exception {
-        doNothing().when(reservationRepository).deleteById("res1");
+    void testGetReservationById_Exists() {
+        when(reservationRepository.findByReservationId("res123")).thenReturn(sampleReservation);
 
-        mockMvc.perform(delete("/api/reservations/res1"))
-                .andExpect(status().isOk());
+        Optional<Reservation> found = reservationService.getReservationById("res123");
+        assertTrue(found.isPresent());
+        assertEquals("res123", found.get().getReservationId());
+    }
 
-        verify(reservationRepository, times(1)).deleteById("res1");
+    @Test
+    void testGetReservationById_NotFound() {
+        when(reservationRepository.findByReservationId("res999")).thenReturn(null);
+
+        Optional<Reservation> found = reservationService.getReservationById("res999");
+        assertFalse(found.isPresent());
+    }
+
+    @Test
+    void testGetReservationsByCustomer() {
+        when(reservationRepository.findByCustomerId("cust001"))
+                .thenReturn(List.of(sampleReservation));
+
+        List<Reservation> reservations = reservationService.getReservationsByCustomer("cust001");
+        assertEquals(1, reservations.size());
+    }
+
+    @Test
+    void testDeleteReservation_Exists() {
+        when(reservationRepository.existsByReservationId("res123")).thenReturn(true);
+        doNothing().when(reservationRepository).deleteByReservationId("res123");
+
+        boolean deleted = reservationService.deleteReservation("res123");
+        assertTrue(deleted);
+        verify(reservationRepository, times(1)).deleteByReservationId("res123");
+    }
+
+    @Test
+    void testDeleteReservation_NotFound() {
+        when(reservationRepository.existsByReservationId("res999")).thenReturn(false);
+
+        boolean deleted = reservationService.deleteReservation("res999");
+        assertFalse(deleted);
+    }
+
+    @Test
+    void testGetUpcomingReservationsForTable() {
+        when(reservationRepository.findByTableIdAndDateAfter(anyInt(), any(Date.class)))
+                .thenReturn(List.of(sampleReservation));
+
+        List<Reservation> results = reservationService.getUpcomingReservationsForTable(1);
+        assertEquals(1, results.size());
+    }
+
+    @Test
+    void testGetAllReservations() {
+        when(reservationRepository.findAll()).thenReturn(List.of(sampleReservation));
+
+        List<Reservation> results = reservationService.getAllReservations();
+        assertEquals(1, results.size());
     }
 }
