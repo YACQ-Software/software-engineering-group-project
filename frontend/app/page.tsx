@@ -1,9 +1,11 @@
-import ReservationSystem from "@/components/reservation-system"
+"use client";
 
-export default function Home() {
+import ReservationSystem from "@/components/reservation-system";
+
+export default function Page() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground p-8">
       <ReservationSystem />
-    </main>
-  )
+    </div>
+  );
 }

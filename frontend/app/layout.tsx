@@ -1,19 +1,22 @@
 // app/layout.tsx
-import "./globals.css"             
-import { ThemeProvider } from "@/components/theme-provider"
+import { ReactNode } from "react";
+import Script from "next/script";
+import { ThemeProvider } from "@/components/theme-provider";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
+      <head>
+        <Script
+          src="https://cdn.tailwindcss.com"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {children}
-        </ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            {children}
+          </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
