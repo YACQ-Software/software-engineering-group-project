@@ -1,9 +1,8 @@
-package com.yacq.software.qmul_project;
+package com.yacq.software.qmul_project.service;
 
 import com.yacq.software.qmul_project.model.reservation.Reservation;
 import com.yacq.software.qmul_project.model.reservation.ReservationStatus;
 import com.yacq.software.qmul_project.repositories.ReservationRepository;
-import com.yacq.software.qmul_project.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
