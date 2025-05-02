@@ -38,39 +38,3 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-// --- Node plugin setup (no yarnEnabled) ---
-node {
-    version.set("18.16.0")
-    download.set(true)
-}
-
-// --- Yarn install ---
-val yarnInstall by tasks.registering(
-    com.github.gradle.node.yarn.task.YarnTask::class
-) {
-    dependsOn(tasks.named("nodeSetup"))
-    workingDir.set(layout.projectDirectory.dir("frontend"))
-    args.set(listOf("install"))
-}
-
-// --- Yarn build ---
-val yarnBuild by tasks.registering(
-    com.github.gradle.node.yarn.task.YarnTask::class
-) {
-    dependsOn(yarnInstall)
-    workingDir.set(layout.projectDirectory.dir("frontend"))
-    args.set(listOf("build"))
-}
-
-// --- Copy React build into Spring’s static folder ---
-tasks.register<Copy>("copyFrontend") {
-    dependsOn(yarnBuild)
-    from(layout.projectDirectory.dir("frontend").dir("build"))
-    into(layout.projectDirectory.dir("src/main/resources/static"))
-}
-
-// Ensure the copy runs before packaging
-tasks.named("processResources") {
-    dependsOn("copyFrontend")
-}

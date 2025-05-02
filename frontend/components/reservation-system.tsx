@@ -1,13 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Clock, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import TableLayout from "@/components/table-layout"
 import TimeSelector from "@/components/time-selector"
 import BookingForm from "@/components/booking-form"
 
-// Sample data for tables
 const tables = [
   { id: 1, size: 2, position: { x: 10, y: 10 }, shape: "circle" },
   { id: 2, size: 4, position: { x: 30, y: 10 }, shape: "rectangle" },
@@ -20,13 +19,12 @@ const tables = [
   { id: 9, size: 2, position: { x: 10, y: 50 }, shape: "circle" },
   { id: 10, size: 4, position: { x: 30, y: 50 }, shape: "rectangle" },
   { id: 11, size: 6, position: { x: 50, y: 50 }, shape: "rectangle" },
-  { id: 12, size: 15, position: { x: 70, y: 50 }, shape: "rectangle" },
+  { id: 12, size: 10, position: { x: 70, y: 50 }, shape: "rectangle" },
   { id: 13, size: 2, position: { x: 10, y: 70 }, shape: "circle" },
   { id: 14, size: 1, position: { x: 30, y: 70 }, shape: "circle" },
   { id: 15, size: 12, position: { x: 50, y: 70 }, shape: "rectangle" },
 ]
 
-// Sample bookings data
 const sampleBookings = {
   "12:00": [1, 3, 5],
   "13:00": [2, 4, 7, 9],
